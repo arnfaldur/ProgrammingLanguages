@@ -1,0 +1,339 @@
+\documentclass[11pt]{exam}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{framed}
+\usepackage{listings}
+\usepackage{enumitem}
+
+\lstset{basicstyle=\ttfamily}
+
+\newcommand*{\Scale}[2][4]{\scalebox{#1}{$#2$}}%
+
+\lhead{T-501-FMAL}
+\rhead{Assignment 3}
+
+\begin{document}
+
+\title{Assignment 3}
+    \author{{\small T-501-FMAL} \\ \quad \\ Jökull Máni Reynisson ({\tt jokull16@ru.is}) \\  Arnaldur Bjarnason ({\tt arnaldur15@ru.is})}
+\date{\today}
+\maketitle
+
+\begin{questions}
+
+%% SPURNING
+
+\question Consider the following program with exceptions:
+  \begin{lstlisting}
+{
+  int x;
+  read(x);
+  try {
+    x = x * 2;
+    try {
+      if (x == 2) {
+        raise E0;
+      } else {
+        x = x + 4;
+      }
+      x = x + 1;
+    } catch (E0) {
+      x = x * 5;
+      raise(E1);
+      x = x + 42175;
+    }
+    x = x * 7;
+  } catch (E1) {
+    x = x + 10;
+  }
+  write(x);
+}
+  \end{lstlisting}
+What will be printed if (i) 0 is read. (ii) 1 is read?
+
+Explain.
+\newpage
+        \begin{enumerate}[label=(\roman*)]
+            \item 0 is read
+                \begin{framed}
+                    If {\tt x} is zero, then we enter the first try block and set {\tt x} to $2\times 0 = 0$ and thus as we enter the second try block we do not raise {\tt E0} and add 4 and then an additional 1 to {\tt x} and it is now 5. We then leave the inner try block, go past the catch block and multiply ${\tt x} = 5 \times 7 = 35$.
+                    We then finally break out of the outer try and {\tt write(x)} and output 35.
+                \end{framed}
+
+            \item 1 is read
+                \begin{framed}
+                    If {\tt x} is one however, then since we set ${\tt x} = 1 \times 2 = 2$ as we enter the outer try and thus will raise {\tt E0} in the inner try and control will jump to the inner catch block, setting ${\tt x} = 2 * 5 = 10$. Following this we have an unconditional raise of {\tt E1} (meaning that the line {\tt x = x + 42175;} is unreachable) and control jumps to the outer catch block finally setting ${\tt x} = 10 + 10 = 20$ before breaking to the outermost block and {\tt write(x)} outputting 20.
+                \end{framed}
+        \end{enumerate}
+
+
+
+%% SPURNING
+
+	\question Sample question
+
+        \begin{enumerate}[label=(\alph*)]
+        \item Suppose {\tt int} is a subtype of {\tt float} in a language with subtyping
+          and implicit conversions but no polymorphism. \\
+          (Suppose also that {\tt int} has no proper subtypes and {\tt float} has no proper supertypes.)\\
+          If the following program is well-typed. What is the type of the function {\tt f}?
+\begin{lstlisting}
+  float x, y;
+  ...
+  if (f(x) mod 3 == 2) then y = f(5);
+\end{lstlisting}
+          {\tt mod} only accepts arguments of type {\tt int}.\\
+          Explain.
+        \item Modify the program so it works when an explicit conversion {\tt i2f} is required to cast an {\tt int} value into a {\tt float} value.
+
+        \end{enumerate}
+
+        \begin{enumerate}[label=(\alph*)]
+            \item 0 is read
+                \begin{framed}
+                    The function {\tt f} has the type {\tt float $\to$ int}.
+
+                    We know that {\tt f} returns {\tt int} because {\tt mod} accepts arguments only of that type. We can also see that {\tt f} takes in both a float and an integer, but since in this language {\tt int} is a subtype of {\tt float} and is thus implicitly converted we can safely assume that the input parameter of {\tt f} is a {\tt float}.
+                \end{framed}
+
+                \newpage
+              \item 1 is read
+                \begin{framed}
+\begin{lstlisting}
+  float x, y;
+  ...
+  if (f(x) mod 3 == 2) then y = f(i2f(5));
+\end{lstlisting}
+                \end{framed}
+        \end{enumerate}
+
+%% SPURNING
+
+      \question Given the following function definition in a language
+        with polymorphism and inferred types but no subtyping.\\
+        Find the most general type of the function {\tt h} in the following program.
+\begin{lstlisting}
+  h(f, g, x) {
+    if (x == 1) {
+      return "hello";
+    } else {
+      return g(f(x));
+    }
+  }
+\end{lstlisting}
+        Assume that $1$ is of type {\tt int}. {\tt "hello"} is of type {\tt string},
+        and comparison for equality is only available for two values of the same type. \\
+        Explain.
+
+	\begin{framed}
+
+            The most general type of the function {\tt h} is
+
+            {\tt (int $\to$ <T>) $\times$ (<T> $\to$ string) $\times$ int $\to$ string}
+
+            We can tell that {\tt h} must return a {\tt string}, because if {\tt x == 1}, the function returns the string {\tt "hello"}. We can further tell that {\tt x} is an {\tt int} due to the fact that comparison for equality is only valid if both sides share a type, and 1 is clearly an integer. For the two functions, we know that since {\tt f} takes in {\tt x} and {\tt x} is an {\tt int}, {\tt f} should take an {\tt int} as an argument (further supported by the fact that there is no subtyping). We have, however, no indication as to what {\tt f} returns and thus none as to what {\tt g} takes as argument (but at least we know it must be the same type {\tt <T>}), but since {\tt h} returns a string and the return value of {\tt g} is returned in {\tt h}, {\tt g} must return a {\tt string}
+
+	\end{framed}
+\newpage
+%% SPURNING
+
+	\question Consider a programming language with pointer types and an explicit dereferencing operator. The programmer deallocates memory and {\emph there is no safety mechanism implemented to detect the emergence of dangling references}. Suppose that assigning to a pointer the value {\tt null} does not free the memory it pointed to, it merely sets the pointer value to {\tt null}, i.e. the pointer now does point anywhere. {\tt free} frees the memory pointed to by a given pointer without clearing it; it also leaves the pointer pointing there.
+
+        \begin{enumerate}[label=(\roman*)]
+            \item What does the following program print? Explain.
+                \begin{lstlisting}
+int *p, *q;
+p = new int;
+q = p;
+*q = 5;
+write(*p);
+p = null;
+write(*q);
+                \end{lstlisting}
+
+                \begin{framed}
+                    The program outputs:
+                    \begin{lstlisting}
+5
+5
+                    \end{lstlisting}
+                    The pointers {\tt p} and {\tt q} begin by pointing at the same memory which is set to 5. {\tt p} is then dereferenced and the contents of the memory it points to is written, which is still 5. The pointer {\tt p} is then set to {\tt null} (with no effect to the memory it pointed to, which {\tt q} still points to) and {\tt q} is then dereferenced and written, resulting in the second 5.
+                \end{framed}
+
+            \item What will the following program print? Explain.
+                \begin{lstlisting}
+int *p, *q;
+p = new int;
+q = p;
+*q = 5;
+free(p);
+write(*q);
+*q = *p + 1;
+write(*p);
+                \end{lstlisting}
+
+                \begin{framed}
+                    The program outputs:
+                    \begin{lstlisting}
+5
+6
+                    \end{lstlisting}
+                    After setting both {\tt p} and {\tt q} to point to the same memory containing the value 5, {\tt p} is freed so that both {\tt p} and {\tt q} are dangling references, but since free does not clear the memory, the memory at the address that the pointers point to is still equal to 5. This means that when we dereference {\tt p} that though the memory that it points to is freed, it has yet to be overwritten and so we write 5. Then we do the same except with {\tt q} and overwrite the memory that {\tt q} points to to 5+1=6 and since {\tt p} and {\tt q} still point to the same (although freed) memory, we finally write 6.
+
+                \end{framed}
+
+            \item What will the following program likely print? (Assume that free heap memory is tracked with a free list, so that the memory freed last will be taken into use anew first). Explain.
+                \begin{lstlisting}
+int *p, *q, *r, *s;
+p = new int;
+q = p;
+*q = 5;
+free(p);
+p = null;
+free(q);
+r = new int;
+*r = 17;
+write(*q);
+s = new int;
+write(*s);
+                \end{lstlisting}
+
+                \begin{framed}
+                     The program outputs:
+                    \begin{lstlisting}
+17
+(unknown)
+                    \end{lstlisting}
+                    After setting both p and q to point to the same memory containing the value 5, p is freed so that both p and q are dangling references as before. p is then set to null and q is freed, but the memory that it points to has already been freed, so it should change nothing. r is then initalized to a newly allocated int that should take the place of the previously freed memory, which only q points to now, and that memory is then set to contain 17. q is then dereferenced and written and since it still points to the memory that was allocated to r, we write the contents of that memory, which is 17. Then we allocate a new integer and initialize the pointer s with its address and then dereference and write it, but the memory that s points to has not been written to and thus we don't know what was there (if anything) before program execution started.
+                \end{framed}
+
+        \end{enumerate}
+\newpage
+%% SPURNING
+
+      \question Suppose we have a language using the reference model (i.e. all variables are references, there is no explicit dereference operator). Memory is freed by a reference-counting garbage collector.\\
+        Conside yhe following program. State which stack and heap variables point to which objects after the execution of each line of the program and what the values of the reference counters of each object are (you can show only the information that changed during the execution of the line).\\
+        Which objects can be garbage-collected after the execution of the last line?
+
+\begin{lstlisting}
+type C = ...;
+type D = record {C f; ...};
+
+C c1 = new C;    % o1 is allocated (and c1 initialized to point to o1)
+C c2;            % (c2 is initialized to null)
+D d1 = new D;    % o2 is allocated (and d1 initialized to point to o2)
+D d2 = new D;    % o3 is allocated
+
+d1.f = new C;    % o4 is allocated
+d2.f = c1;
+c1 = d1.f;
+c2 = c1;
+d2 = d1;
+\end{lstlisting}
+
+	\begin{framed}
+
+            {\tt
+            \begin{enumerate}
+                \item C c1 = new C;    % o1 is allocated (and c1 initialized to point to o1)
+
+                    \begin{tabular}{|l|l|}
+                        \hline
+                        c1 & o1 \\
+                        \hline
+                    \end{tabular}
+                \item C c2;            % (c2 is initialized to null)
+
+                    \begin{tabular}{|l|l|}
+                        \hline
+                        c1 & o1 \\
+                        c2 & null \\
+                        \hline
+                    \end{tabular}
+                \item D d1 = new D;    % o2 is allocated (and d1 initialized to point to o2)
+
+                    \begin{tabular}{|l|l|}
+                        \hline
+                        c1 & o1 \\
+                        c2 & null \\
+                        d1 & o2\{f: null\} \\
+                        \hline
+                    \end{tabular}
+                \item D d2 = new D;    % o3 is allocated
+
+                    \begin{tabular}{|l|l|}
+                        \hline
+                        c1 & o1 \\
+                        c2 & null \\
+                        d1 & o2\{f: null\} \\
+                        d2 & o3\{f: null\} \\
+                        \hline
+                    \end{tabular}
+                \item d1.f = new C;
+
+                    \begin{tabular}{|l|l|}
+                        \hline
+                        c1 & o1 \\
+                        c2 & null \\
+                        d1 & o2\{f: o4\} \\
+                        d2 & o3\{f: o1\} \\
+                        \hline
+                    \end{tabular}
+                    \newpage
+                \item d2.f = c1;
+
+                    \begin{tabular}{|l|l|}
+                        \hline
+                        c1 & o1 \\
+                        c2 & null \\
+                        d1 & o2\{f: o4\} \\
+                        d2 & o3\{f: o1\} \\
+                        \hline
+                    \end{tabular}
+                \item c1 = d1.f;
+
+                    \begin{tabular}{|l|l|}
+                        \hline
+                        c1 & o4 \\
+                        c2 & null \\
+                        d1 & o2\{f: o4\} \\
+                        d2 & o3\{f: o1\} \\
+                        \hline
+                    \end{tabular}
+                \item c2 = c1;
+
+                    \begin{tabular}{|l|l|}
+                        \hline
+                        c1 & o4 \\
+                        c2 & o4 \\
+                        d1 & o2\{f: o4\} \\
+                        d2 & o3\{f: o1\} \\
+                        \hline
+                    \end{tabular}
+                \item d2 = d1;
+
+                    \begin{tabular}{|l|l|}
+                        \hline
+                        c1 & o4 \\
+                        c2 & o4 \\
+                        d1 & o2\{f: o4\} \\
+                        d2 & o2\{f: o4\} \\
+                        \hline
+                    \end{tabular}
+            \end{enumerate}
+            }
+            Now the objects {\tt o1} and {\tt o3} can be garbage collected.
+	\end{framed}
+
+\end{questions}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

@@ -1,0 +1,363 @@
+\documentclass[12pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amsthm,amssymb,amsfonts}
+\usepackage{listings}
+\usepackage{enumitem,framed}
+
+\lstset{basicstyle=\ttfamily}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\R}{\mathbb{R}}
+
+\newenvironment{problem}[2][Problem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+%if you want to title your bold things something different just make another thing exactly like this but replace "problem" with the name of the thing you want, like theorem or lemma or whatever
+\newenvironment{solution}[2][Solution]{\begin{trivlist}
+  \item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+
+\begin{document}
+
+%\renewcommand{\qedsymbol}{\filledbox}
+%Good resources for looking up how to do stuff:
+%Binary operators: http://www.access2science.com/latex/Binary.html
+%General help: http://en.wikibooks.org/wiki/LaTeX/Mathematics
+%Or just google stuff
+
+{\small{\sc\noindent
+    Arnaldur Bjarnason ({\tt arnaldur15@ru.is})\\ and Jökull Máni Reynisson ({\tt jokull16@gmail.com})
+}}
+
+\title{Homework template}
+\author{Arnaldur Bjarnason}
+\maketitle
+
+\begin{problem}{1}
+
+  Consider the program:
+  \begin{lstlisting}
+    {
+      int x = 1;
+
+      int p (int z) {
+        x = x + 3;
+        return (z * 3);
+      }
+
+      write (p (x) + x * 2);
+    }
+  \end{lstlisting}
+
+  {\tt
+  \begin{enumerate}[label=(\alph*)]
+  \item call-by-value
+    \begin{enumerate}[label=(\roman*)]
+    \item left-to-right
+      \begin{framed}
+        p(x) is evaluated first, returning 3 after assigning 1 + 3 to x so then we get: \\
+        3 + 4 * 2 = 11
+      \end{framed}
+    \item right-to-left
+      \begin{framed}
+        Here x * 2 is evaluated first resulting in 2 and p(x) returns 3 again. \\
+        3 + 2 = 5
+      \end{framed}
+    \end{enumerate}
+  \item call-by-reference
+    \begin{enumerate}[label=(\roman*)]
+    \item left-to-right
+      \begin{framed}
+
+        12 + 8 = 20
+      \end{framed}
+    \item right-to-left
+      \begin{framed}
+        12 + 2 = 14
+      \end{framed}
+    \end{enumerate}
+  \end{enumerate}}
+
+\end{problem}
+
+\begin{problem}{2}
+
+  Consider the program:
+  \begin{lstlisting}
+    {
+      int x = 1;
+
+      void p() {
+        x = x * 5;
+        write(x);
+      }
+
+      void q() {
+        int x = 10;
+        p();
+        write(x);
+      }
+
+      q();
+      write(x);
+
+      {
+        int x = 8;
+
+        p();
+        write(x);
+      }
+
+      write (x);
+    }
+  \end{lstlisting}
+
+  \begin{enumerate}[label=(\alph*)]
+  \item static scope
+    \begin{framed}
+      5
+      10
+      5
+      25
+      8
+      25
+    \end{framed}
+  \item dynamic scope
+    \begin{framed}
+      50
+      50
+      1
+      40
+      40
+      1
+    \end{framed}
+  \end{enumerate}
+
+\end{problem}
+\newpage
+\begin{problem}{3}
+
+  Consider the program:
+  \begin{lstlisting}
+    A : {
+
+      void p () {
+        ...
+        void r () {
+          ...
+        }
+        ...
+        r ();
+        ...
+        if (...) then q ();
+        ...
+      }
+
+      void q () {
+        ...
+        p ();
+        ...
+      }
+
+      void s () {
+        ...
+      }
+
+      B : {
+        ...
+        s ();
+        ...
+      }
+      ...
+      p ();
+      ...
+    }
+  \end{lstlisting}
+
+  \begin{enumerate}
+  \item enter A;
+    \begin{framed}
+
+    \end{framed}
+  \item enter B;
+    \begin{framed}
+
+    \end{framed}
+  \item enter s;
+    \begin{framed}
+
+    \end{framed}
+  \item exit s;
+    \begin{framed}
+
+    \end{framed}
+  \item exit B;
+    \begin{framed}
+
+    \end{framed}
+  \item enter p;
+    \begin{framed}
+
+    \end{framed}
+  \item enter r;
+    \begin{framed}
+
+    \end{framed}
+  \item exit r;
+    \begin{framed}
+
+    \end{framed}
+  \item enter q;
+    \begin{framed}
+
+    \end{framed}
+  \item enter p;
+    \begin{framed}
+
+    \end{framed}
+  \item enter r;
+    \begin{framed}
+
+    \end{framed}
+  \item exit r;
+    \begin{framed}
+
+    \end{framed}
+  \item enter q;
+    \begin{framed}
+
+    \end{framed}
+  \item enter p;
+    \begin{framed}
+
+    \end{framed}
+  \item enter r;
+    \begin{framed}
+
+    \end{framed}
+  \item exit r;
+    \begin{framed}
+
+    \end{framed}
+  \item exit p;
+    \begin{framed}
+
+    \end{framed}
+  \item exit q;
+    \begin{framed}
+
+    \end{framed}
+  \item exit p;
+    \begin{framed}
+
+    \end{framed}
+  \item exit q;
+    \begin{framed}
+
+    \end{framed}
+  \item exit p;
+    \begin{framed}
+
+    \end{framed}
+  \item exit A;
+    \begin{framed}
+
+    \end{framed}
+  \end{enumerate}
+\end{problem}
+
+\begin{problem}{4} Consider a program:
+  \begin{lstlisting}
+    {
+      int z = 2;
+
+      void p (int x) {
+        z = x + 5;
+        write(x);
+        x = z + 3;
+        write(z);
+      }
+
+      p(z);
+      write(z);
+    }
+  \end{lstlisting}
+  {\tt
+  \begin{enumerate}[label=(\roman*)]
+  \item call-by-value
+    \begin{framed}
+      2 // The parameter x is not assigned to so we write 2. \\
+      7 // z is set to x + 5 which evaluates to 7 so we write 7 \\
+      7 // z remains 7 so we write that.
+    \end{framed}
+  \item call-by-reference
+    \begin{framed}
+      7\ \ // x is an alias for z so z = z + 5 and we write 7. \\
+      10 // as z and x are interchangeable, z = 7 + 3 and it is written. \\
+      10 // the last assignment of z resulted in 10 so it remains unchanged.
+    \end{framed}
+  \item call-by-value-result
+    \begin{framed}
+      2\ \ // the initial two values are the same as in the call-by-value case. \\
+      7 \\
+      10 // The variable z is set to the value of x when p exits.
+    \end{framed}
+  \end{enumerate}}
+\end{problem}
+\begin{problem}{5} Think silently about programs:
+
+  \begin{lstlisting}
+    {
+      int x = 7;
+
+      void p() {
+        write(x);
+      }
+
+      void q(void px()) {
+        int x = 4;
+        px();
+      }
+
+      void r() {
+        int x = 3;
+        q(p);
+      }
+
+      {
+        x = 1;
+        p();
+        q(p);
+        r();
+      }
+    }
+  \end{lstlisting}
+  {\tt
+  \begin{enumerate}[label=(\roman*)]
+
+  \item static scope (and deep binding).
+    \begin{framed}
+      1 \\
+      1 \\
+      1 \\
+      All calls to p() refer to the outermost defined x which has been assigned the value 1 when the procedures are called.
+    \end{framed}
+  \item dynamic scope and deep binding.
+    \begin{framed}
+      1 // This works like the previous examples. \\
+      1 // Here the environment is bound when p is passed as an argument to q so it has the same environment as the previous call.\\
+      3 // The environment is bound within r() at the invocation of q(p) and there x is redefined, overriding the x in the outermost scope.\\
+    \end{framed}
+  \item dynamic scope and shallow binding.
+    \begin{framed}
+      1 // Deep and shallow binding has no effect on this call of p() \\
+      4 // x is inherited from the innermost scope it is defined in so the declaration within q is used in the last two cases. \\
+      4
+    \end{framed}
+  \end{enumerate}}
+\end{problem}
+\end{document}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

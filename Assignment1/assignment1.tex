@@ -1,0 +1,289 @@
+\documentclass[12pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amsthm,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{tkz-graph}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\R}{\mathbb{R}}
+
+\newenvironment{problem}[2][Problem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+%If you want to title your bold things something different just make another thing exactly like this but replace "problem" with the name of the thing you want, like theorem or lemma or whatever
+
+\begin{document}
+
+%\renewcommand{\qedsymbol}{\filledbox}
+%Good resources for looking up how to do stuff:
+%Binary operators: http://www.access2science.com/latex/Binary.html
+%General help: http://en.wikibooks.org/wiki/LaTeX/Mathematics
+%Or just google stuff
+
+\title{Forritunarmál - Assignment 1}
+\maketitle
+{\small{\sc\noindent
+        Arnaldur Bjarnason ({\tt arnaldur15@ru.is}) and Jökull Máni Reynisson ({\tt jokull16@ru.is})
+}}
+
+\begin{enumerate}
+\item
+  \begin{enumerate}
+  \item Consider the context-free grammar $(\{S,P\},\{a,f,*\},R,S)$ where $R$ is the set of rules:
+  \[
+    \begin{array}{lll}
+      S & \rightarrow & fS \\
+      S & \rightarrow & S*P \\
+      S & \rightarrow & P \\
+      P & \rightarrow & a \\
+      P & \rightarrow & aP \\
+    \end{array}
+  \]
+  Show that this grammar is ambiguous by exhibiting a string with two different derivation trees.
+
+  The string $fa*a$ can be derived in two ways as shown:
+  \[
+    \begin{array}{l}
+      S\\
+      fS\\
+      fS*P\\
+      fP*a\\
+      fa*a\\
+    \end{array}
+  \]
+  \[
+    \begin{tikzpicture}
+      \tikzstyle{level 1}=[sibling distance =2cm]
+      \tikzstyle{level 2}=[sibling distance =1cm]
+      \GraphInit[vstyle=Empty]
+      \SetVertexMath
+      \node{$S$}
+      child{node{$f$}}
+      child{node{$S$}
+        child{node{$S$}
+          child{node{$P$}
+            child{node{$a$}}
+          }
+        }
+        child{node{$*$}}
+        child{node{$P$}
+          child{node{$a$}}
+        }
+      };
+    \end{tikzpicture}
+    \begin{tikzpicture}
+      \tikzstyle{level 1}=[sibling distance =1cm]
+      \tikzstyle{level 2}=[sibling distance =1cm]
+      \GraphInit[vstyle=Empty]
+      \SetVertexMath
+      \node{$S$}
+      child{node[anchor=east]{$S$}
+        child{node{$f$}}
+        child{node{$S$}
+          child{node{$P$}
+            child{node{$a$}}
+          }
+        }
+      }
+      child{node{$*$}}
+      child{node{$P$}
+        child{node{$a$}}
+      };
+    \end{tikzpicture}
+  \]
+  \newpage
+  \item Suppose we added a terminal $g$ and replaced the 1st rule above with the rule
+  \[ S \rightarrow fSg \]
+  Argue that the new grammar is unambiguous. \\
+  If we replace the first statement as described, we get:
+  \[
+    \begin{array}{lll}
+      S & \rightarrow & fSg \\
+      S & \rightarrow & S*P \\
+      S & \rightarrow & P \\
+      P & \rightarrow & a \\
+      P & \rightarrow & aP \\
+    \end{array}
+  \]
+  and attempting to recreate the ambiguity we get:
+    \[
+    \begin{array}{l}
+      S\\
+      fS\\
+      fS*P\\
+      fP*a\\
+      fa*a\\
+    \end{array}
+  \]
+  \[
+    \begin{tikzpicture}
+      \tikzstyle{level 1}=[sibling distance =2cm]
+      \tikzstyle{level 2}=[sibling distance =1cm]
+      \GraphInit[vstyle=Empty]
+      \SetVertexMath
+      \node{$S$}
+      child{node{$f$}}
+      child{node{$S$}
+        child{node{$S$}
+          child{node{$P$}
+            child{node{$a$}}
+          }
+        }
+        child{node{$*$}}
+        child{node{$P$}
+          child{node{$a$}}
+        }
+      }
+      child{node{$g$}};
+    \end{tikzpicture}
+    \begin{tikzpicture}
+      \tikzstyle{level 1}=[sibling distance =1cm]
+      \tikzstyle{level 2}=[sibling distance =1cm]
+      \GraphInit[vstyle=Empty]
+      \SetVertexMath
+      \node{$S$}
+      child[sibling distance=1.7cm]{node[anchor=east]{$S$}
+        child{node{$f$}}
+        child{node{$S$}
+          child{node{$P$}
+            child{node{$a$}}
+          }
+        }
+        child{node{$g$}}
+      }
+      child{node{$*$}}
+      child{node{$P$}
+        child{node{$a$}}
+      };
+    \end{tikzpicture}
+  \]
+  These derivations result in $fa*ag$ and $fag*a$ which obviously are not the same. This grammar is unambiguous as there are no rules whose orders can be swapped while producing the same result.
+\end{enumerate}
+
+\item Let $T=\{a,b,c\}$. Define context-free grammars for the following sets of strings over $T$ as the set of terminals:
+  \begin{enumerate}
+  \item all strings that contain $abc$ as a substring; \\
+    $(\{S,A\},\{a,b,c\},R,S)$:
+    \[
+      \begin{array}{lll}
+        S & \rightarrow & AabcA \\
+        A & \rightarrow & AA \\
+        A & \rightarrow & a \\
+        A & \rightarrow & b \\
+        A & \rightarrow & c \\
+      \end{array}
+    \]
+  \item all strings with at least one $a$ and at least one $c$ such that the first $a$ is before the last $c$ (so that e.g. $abbc$ and $bcabc$ are derivable but $bc$ and $cbcba$ are not); \\
+    $(\{S,A\},\{a,b,c\},R,S)$:
+    \[
+      \begin{array}{lll}
+        S & \rightarrow & AaAcA \\
+        A & \rightarrow & AA \\
+        A & \rightarrow & a \\
+        A & \rightarrow & b \\
+        A & \rightarrow & c \\
+      \end{array}
+    \]
+  \item all strings of the form $(ab)^nc^{n+2}$ (so e.g. $abababccccc$ is derivable). \\
+    $(\{S\},\{a,b,c\},R,S)$
+    \[
+      \begin{array}{lll}
+        S & \rightarrow & abSc \\
+        S & \rightarrow & cc \\
+      \end{array}
+    \]
+  \end{enumerate}
+\item Consider the context-free grammar $(\{S,P\},\{a,b,c\},R,S)$ where $R$ is this set of rules:
+    \[
+      \begin{array}{lll}
+        S & \rightarrow & a \\
+        S & \rightarrow & cSSb \\
+        S & \rightarrow & aPa \\
+        P & \rightarrow & bPc \\
+      \end{array}
+    \]
+    \begin{enumerate}
+    \item Write down a derivation tree for the string $ccaabab$.
+      \[
+        \begin{tikzpicture}
+          \tikzstyle{level 2}=[sibling distance =1cm]
+          \GraphInit[vstyle=Empty]
+          \SetVertexMath
+          \node{$S$}
+          child[sibling distance=2cm]{node{$c$}}
+          child{node{$S$}
+            child{node{$c$}}
+            child{node{$S$}
+              child{node{$a$}}
+            }
+            child{node{$S$}
+              child{node{$a$}}
+            }
+            child{node{$b$}}
+          }
+          child[sibling distance=3.5cm]{node{$S$}
+            child{node{$a$}}
+          }
+          child[sibling distance=2cm]{node{$b$}};
+        \end{tikzpicture}
+      \]
+    \item Argue that there cannot be a derivation tree for any string starting with $b$.\\
+      The initial symbol is $S$ and no production whose head is $S$, starts with $b$.
+    \item Argue that the length of any derivable string (of terminals only) must be of the form $3n+1$ (i.e., 1, 4, 7, 10, ...). \\
+      The non-terminal $P$ can't appear in any finite derivation as the only rule whose head is $P$, results in another $P$. So the only rules that are relevant are:
+      $$S \rightarrow a\ |\ cSSb$$
+      The first rule has no effect on the length of the resulting string as it just turns the non-terminal into a terminal. The latter rule turns one character into four, effectively adding 3 characters. So we start with one and we can only add three $n$ times, resulting in a length of $1+3n$.
+    \end{enumerate}
+
+  \item Consider the program
+    \[(\textbf{if } x == 3 \textbf{ then } y := ((z+3)*2) \textbf{ else } z := 1); x := 4 \]
+    in the example language of the book (See. 2.5)
+    \begin{enumerate}
+    \item What is the first step of this program from the initial state $\sigma = \{(x,3),(z,4)\}$ according to the structural operational semantics given in the book. Write down the proof tree that formally justifies this step.
+      \[
+        \begin{array}{lll}
+          b   & \longleftrightarrow & x==3 \\
+          r_1 & \longleftrightarrow & y := ((z+3)*2) \\
+          r_2 & \longleftrightarrow & z := 1 \\
+          f   & \longleftrightarrow & x := 4 \\
+        \end{array}
+      \]
+      \[
+          \frac{ \langle x, \sigma \rangle \rightarrow \langle \sigma(x), \sigma \rangle }{ \langle x, \sigma \rangle \rightarrow \langle 3, \sigma \rangle }
+      \]
+      \[
+          \frac{ \langle x, \sigma \rangle \rightarrow \langle 3, \sigma \rangle }{ \langle x==3, \sigma \rangle \rightarrow \langle 3 == 3, \sigma \rangle }
+      \]
+      \[
+          \frac{ \langle b, \sigma \rangle \rightarrow \langle 3 == 3, \sigma \rangle }{
+          \langle \textbf{if } b \textbf{ then } r_1 \textbf{ else } r_2, \sigma \rangle \rightarrow \langle \textbf{if } 3 == 3 \textbf{ then } r_1 \textbf{ else } r_2, \sigma \rangle
+        }
+      \]
+      \[
+          \frac{
+          \langle \textbf{if } b \textbf{ then } r_1 \textbf{ else } r_2, \sigma \rangle \rightarrow \langle \textbf{if } 3 == 3 \textbf{ then } r_1 \textbf{ else } r_2, \sigma \rangle
+          }{
+          \langle (\textbf{if } b \textbf{ then } r_1 \textbf{ else } r_2); f, \sigma \rangle \rightarrow \langle (\textbf{if } 3 == 3 \textbf{ then } r_1 \textbf{ else } r_2); f, \sigma \rangle
+          }
+      \]
+    \item Write down the computation (maximal sequence of steps) of this program from the initial state $\sigma$.
+      \[
+        \begin{array}{l}
+          \langle (\textbf{if } x == 3 \textbf{ then } y := ((z+3)*2) \textbf{ else } z := 1); x := 4, \{(x,3),(z,4)\} \rangle\\
+          \rightarrow \langle (\textbf{if } 3 == 3 \textbf{ then } y := ((z+3)*2) \textbf{ else } z := 1); x := 4, \{(x,3),(z,4)\} \rangle\\
+          \rightarrow \langle (\textbf{if } tt \textbf{ then } y := ((z+3)*2) \textbf{ else } z := 1); x := 4, \{(x,3),(z,4)\} \rangle\\
+          \rightarrow \langle y := ((z+3)*2); x := 4, \{(x,3),(z,4)\} \rangle\\
+          \rightarrow \langle y := ((4+3)*2); x := 4, \{(x,3),(z,4)\} \rangle\\
+          \rightarrow \langle y := (7*2); x := 4, \{(x,3),(z,4)\} \rangle\\
+          \rightarrow \langle y := 14; x := 4, \{(x,3),(z,4)\} \rangle\\
+          \rightarrow \langle x := 4, \{(x,3),(z,4),(y,14)\} \rangle\\
+          \rightarrow \{(x,4),(z,4),(y,14)\} \\
+        \end{array}
+      \]
+    \end{enumerate}
+\end{enumerate}
+
+
+
+\end{document}
