@@ -77,3 +77,36 @@ in
 end;
 
 (* Q4 iii *)
+fun valid xs =
+let
+  fun m [] = true
+    | m (a::[]) = true
+    | m (a::b::xs) =
+    if List.last a = List.hd b then
+      m (b::xs)
+    else
+      false;
+  fun cons (f, []) = true
+    | cons (f, [x]) = true
+    | cons (f, x::y::xs) =
+    if f (x, y) then
+      cons (f, y::xs)
+    else
+      false;
+  fun dir [] = 0
+    | dir xs =
+    if cons (op>, xs) then
+      1
+    else if cons (op=, xs) then
+      2
+    else if cons (op<, xs) then
+      3
+    else
+      0;
+  val dirs = List.map dir xs
+in
+  List.all (fn(x) => not (x = [])) xs
+  andalso m xs
+  andalso List.all (fn(x) => not (x = 0)) dirs
+  andalso cons ((fn(x,y) => not (x=y)), dirs)
+end;
