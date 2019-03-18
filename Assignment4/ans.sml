@@ -35,17 +35,32 @@ fun splitAtLast _ [] = ([],[])
 (* Q3 b *)
 fun splitAtFirst n xs =
 let
-  fun splt (_, axs, []) = (axs, [])
-    | splt (n, axs, b::bxs) =
+  fun splt _ axs [] = (axs, [])
+    | splt n axs (b::bxs) =
     if n = b then
       (axs, [b] @ bxs)
     else
-      splt (n, axs @ [b], bxs);
+      splt n (axs @ [b]) bxs;
 in
-  splt (n, [], xs)
+  splt n [] xs
 end;
 
+
 (* Q4 i *)
+fun break [] = []
+  | break [(x : int)] = [[x]]
+  | break (x::y::xs) =
+	let
+		val cmp = if x > y then op> else if x = y then op= else op<;
+		fun ordseg seg [] = (seg, [])
+		  | ordseg seg (h::[]) = (seg @ [h], [])
+		  | ordseg seg (h::s::t) =
+			if cmp (h, s) then ordseg (seg @ [h]) (s::t) else (seg @ [h], h::s::t);
+		val (seg, rest) = ordseg [] (x::y::xs);
+	in
+		[seg] @ break rest
+	end;
+
 
 (* Q4 ii *)
 fun join xs =
@@ -60,3 +75,5 @@ let
 in
   foldr j [] xs
 end;
+
+(* Q4 iii *)
