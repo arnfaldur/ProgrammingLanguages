@@ -39,3 +39,19 @@ let
 in
   splt (n, [], xs)
 end;
+
+(* Q4 i *)
+
+(* Q4 ii *)
+fun join xs =
+let
+  fun j ([],_) = raise Fail "Empty Segment"
+    | j (a,[]) = a
+    | j (a, b) =
+    if List.last a = List.hd b then
+      a @ List.tl b
+    else
+      raise Fail "Disconnected Segments";
+in
+  foldr j [] xs 
+end;
