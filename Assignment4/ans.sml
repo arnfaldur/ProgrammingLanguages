@@ -52,11 +52,11 @@ fun join xs =
 let
   fun j ([],_) = raise Fail "Empty Segment"
     | j (a,[]) = a
-    | j (a, b) =
-    if List.last a = List.hd b then
-      a @ List.tl b
+    | j (a, (b::bs)) =
+    if List.last a = b then
+      a @ bs
     else
       raise Fail "Disconnected Segments";
 in
-  foldr j [] xs 
+  foldr j [] xs
 end;
