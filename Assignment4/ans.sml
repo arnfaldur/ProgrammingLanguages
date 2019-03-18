@@ -77,36 +77,59 @@ in
 end;
 
 (* Q4 iii *)
-fun valid xs =
-let
-  fun m [] = true
-    | m (a::[]) = true
-    | m (a::b::xs) =
-    if List.last a = List.hd b then
-      m (b::xs)
-    else
-      false;
-  fun cons (f, []) = true
-    | cons (f, [x]) = true
-    | cons (f, x::y::xs) =
-    if f (x, y) then
-      cons (f, y::xs)
-    else
-      false;
-  fun dir [] = 0
-    | dir xs =
-    if cons (op>, xs) then
-      1
-    else if cons (op=, xs) then
-      2
-    else if cons (op<, xs) then
-      3
-    else
-      0;
-  val dirs = List.map dir xs
-in
-  List.all (fn(x) => not (x = [])) xs
-  andalso m xs
-  andalso List.all (fn(x) => not (x = 0)) dirs
-  andalso cons ((fn(x,y) => not (x=y)), dirs)
-end;
+fun valid [] = true
+  | balid [x] = true
+  | balid ([]::y::re) = false
+  | balid (_::[]::re) = false
+  | balid ((x::[])::y::re) = x = List.hd y andalso balid (y::re)
+  | balid ((x::xp::xs)::y::re) =
+	let
+		val cmp = if x > xp then op> else if x = xp then op= else op<;
+		fun cons [] = true
+		  | cons [h] = true
+		  | cons (h::s::t) =
+			if cmp (h, s) then
+				cons (s::t)
+			else
+				false;
+	in
+		cons (x::xp::xs)
+		andalso not (cons y)
+		andalso List.last (xp::xs) = List.hd y
+		andalso balid (y::re)
+	end;
+
+
+(* fun valid xs = *)
+(* let *)
+(*   fun m [] = true *)
+(*     | m (a::[]) = true *)
+(*     | m (a::b::xs) = *)
+(*     if List.last a = List.hd b then *)
+(*       m (b::xs) *)
+(*     else *)
+(*       false; *)
+(*   fun cons (f, []) = true *)
+(*     | cons (f, [x]) = true *)
+(*     | cons (f, x::y::xs) = *)
+(*     if f (x, y) then *)
+(*       cons (f, y::xs) *)
+(*     else *)
+(*       false; *)
+(*   fun dir [] = 0 *)
+(*     | dir xs = *)
+(*     if cons (op>, xs) then *)
+(*       1 *)
+(*     else if cons (op=, xs) then *)
+(*       2 *)
+(*     else if cons (op<, xs) then *)
+(*       3 *)
+(*     else *)
+(*       0; *)
+(*   val dirs = List.map dir xs *)
+(* in *)
+(*   List.all (fn(x) => not (x = [])) xs *)
+(*   andalso m xs *)
+(*   andalso List.all (fn(x) => not (x = 0)) dirs *)
+(*   andalso cons ((fn(x,y) => not (x=y)), dirs) *)
+(* end; *)
