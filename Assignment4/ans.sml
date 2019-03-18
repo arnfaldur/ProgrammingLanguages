@@ -6,26 +6,31 @@ fun fromTo (a,b) c =
     [];
 
 (* Q2 a *)
-fun halve a =
-  let
-    fun atn ([], _) = []
-    |   atn (x::xs, b) =
-      if b then
-        [x]
-      else
-        atn(xs, not b);
+fun halve [] = ([],[])
+  | halve (x::xs) = let
+	fun alternate [] = []
+	  | alternate (a::[]) = [a]
+	  | alternate (a::b::t) = a::alternate t
   in
-    (atn (a, true), atn (a, false))
-  end; 
+	  (alternate (x::xs), alternate xs)
+  end;
 
 (* Q2 b *)
 fun merge (a, []) = a
   | merge ([], b) = b
   | merge (a::axs, b::bxs) =
-      [a] @ [b] @ merge (axs, bxs);
-
+    (a::b::merge (axs, bxs));
 
 (* Q3 a *)
+fun splitAtLast _ [] = ([],[])
+  | splitAtLast el xs =
+	let
+		fun findLast i res [] = res
+		  | findLast i res (h::t) = findLast (i+1) (if h = el then i else res) t;
+		val spliti = findLast 1 0 xs
+	in
+		(List.take (xs, spliti), List.drop (xs, spliti))
+	end;
 
 (* Q3 b *)
 fun splitAtFirst n xs =
