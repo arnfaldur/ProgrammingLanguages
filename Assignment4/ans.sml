@@ -6,7 +6,7 @@ fun fromTo (a,b) c =
     [];
 
 (* Q2 a *)
-(* fun halve a =
+fun halve a =
   let
     fun atn ([], _) = []
     |   atn (x::xs, b) =
@@ -16,8 +16,7 @@ fun fromTo (a,b) c =
         atn(xs, not b);
   in
     (atn (a, true), atn (a, false))
-  end; *)
-fun halve a = ListPair.unzip a
+  end; 
 
 (* Q2 b *)
 fun merge (a, []) = a
