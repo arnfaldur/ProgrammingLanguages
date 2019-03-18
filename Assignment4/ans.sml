@@ -6,7 +6,7 @@ fun fromTo (a,b) c =
     [];
 
 (* Q2 a *)
-fun halve a =
+(* fun halve a =
   let
     fun atn ([], _) = []
     |   atn (x::xs, b) =
@@ -16,7 +16,8 @@ fun halve a =
         atn(xs, not b);
   in
     (atn (a, true), atn (a, false))
-  end;
+  end; *)
+fun halve a = ListPair.unzip a
 
 (* Q2 b *)
 fun merge (a, []) = a
@@ -28,14 +29,14 @@ fun merge (a, []) = a
 (* Q3 a *)
 
 (* Q3 b *)
-fun splitAtFirst at xs =
+fun splitAtFirst n xs =
 let
-  fun splt _ (as, []) = (as, [])
-    | splt at (as, b::bs) =
-    if at = b then
-      (as, [b] @ bs)
+  fun splt (_, axs, []) = (axs, [])
+    | splt (n, axs, b::bxs) =
+    if n = b then
+      (axs, [b] @ bxs)
     else
-      splt at (as @ b, bs)
+      splt (n, axs @ [b], bxs);
 in
-  splt at ([], xs)
+  splt (n, [], xs)
 end;
