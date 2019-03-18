@@ -78,11 +78,11 @@ end;
 
 (* Q4 iii *)
 fun valid [] = true
-  | balid [x] = true
-  | balid ([]::y::re) = false
-  | balid (_::[]::re) = false
-  | balid ((x::[])::y::re) = x = List.hd y andalso balid (y::re)
-  | balid ((x::xp::xs)::y::re) =
+  | valid [x] = true
+  | valid ([]::y::re) = false
+  | valid (_::[]::re) = false
+  | valid ((x::[])::y::re) = x = List.hd y andalso valid (y::re)
+  | valid ((x::xp::xs)::y::re) =
 	let
 		val cmp = if x > xp then op> else if x = xp then op= else op<;
 		fun cons [] = true
@@ -96,7 +96,7 @@ fun valid [] = true
 		cons (x::xp::xs)
 		andalso not (cons y)
 		andalso List.last (xp::xs) = List.hd y
-		andalso balid (y::re)
+		andalso valid (y::re)
 	end;
 
 
