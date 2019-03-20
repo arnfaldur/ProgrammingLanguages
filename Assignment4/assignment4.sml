@@ -3,7 +3,7 @@
 *
 * Authors:
 *       Arnaldur Bjarnason    (arnaldur15@ru.is)
-*       Jökull Máni Reynisson (jokull16@ru.is)
+*       Jökull Máni Reynisson (jokull16@ru.is)       
 *)
 
 (* Q1 *)
@@ -15,7 +15,7 @@ fun fromTo (a,b) c =
 
 (* Q2 i *)
 fun halve [] = ([],[])
-  | halve (x::xs) =
+  | halve (x::xs) = 
   let
     fun alternate [] = []
       | alternate (a::[]) = [a]
